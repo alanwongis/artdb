@@ -13,10 +13,9 @@
 	
 	<script src="./jquery.mobile-1.4.5/jquery.js"></script>
 
-	<script src="./jquery.mobile-1.4.5//jquery.mobile-1.4.5.min.js"></script>
+	<script src="./jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
 	
-	<script src="./artform.js">	</script>
-	
+    <script src="./jquery.validate.js"></script>
 	
 </head>
 
@@ -52,6 +51,7 @@
 
     <div data-role="header" data-theme="b"><a href="#" data-rel="back" data-role="button">Go back</a>
    		<h1>Artwork Details</h1>
+   		<button type="submit" id="artdetails-save-btn">Save changes</button>
     </div>
 
     <div data-role="content">
@@ -90,6 +90,11 @@
 			 </div>
 			 
 			 
+			 <div class="ui-field-contain">
+			 <label for="artform-purchaser">Purchaser</label>
+			 <input type="text" name="artform-purchaser"  id="artform-purchaser" value = "" />
+			 </div>
+			 
 			 
             </div>
             <div class="ui-block-b">
@@ -115,4 +120,8 @@
 
 
 </body>
+
+
+	<script src="./artform.js">	</script>
+	
 </html>

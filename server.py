@@ -79,7 +79,7 @@ class ArtworkAPI(object):
         
         args = cherrypy.request.json
         print ident, str(args)
-        # result = models.update_artwork(ident, args)
+        result = models.update_artwork(ident, **args)
         result = True
         
         if result:

@@ -117,8 +117,14 @@ def create_artwork():
 
 
 def update_artwork(ident, **kwargs):
-    pass
-
+    ident = int(ident)
+    s = session()
+    artwork = s.query(Artwork).filter(Artwork.id == ident).one()
+    artwork.title = kwargs["title"]   
+    #artwork.list_price = int(kwargs["list_price"])
+    #artwork.medium = kwargs["medium"]
+    s.commit()
+    
 
 def delete_artwork(ident):
     pass
