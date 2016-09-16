@@ -1,0 +1,5 @@
+*.pyc
+static/images
+static/thumbs
+static/jquery.mobile-1.4.5
+

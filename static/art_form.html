@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Multi-page template</title>
+	<link rel="stylesheet" href="./jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
+	
+	<!--
+	<link rel="shortcut icon" href="../favicon.ico">
+	-->
+	
+	<script src="./jquery.mobile-1.4.5/jquery.js"></script>
+
+	<script src="./jquery.mobile-1.4.5//jquery.mobile-1.4.5.min.js"></script>
+	
+	<script src="./artform.js">	</script>
+	
+	
+</head>
+
+<body>
+
+<div data-role="page" id="artlist-page">
+
+	<div data-role="header" data-position="fixed">
+		<h1>Artworks</h1>
+		
+		<h1>Search filter bar</h1>
+		<a href="../../" data-icon="home" data-iconpos="notext" data-direction="reverse">Home</a>
+		<a href="../nav.html" data-icon="search" data-iconpos="notext" data-rel="dialog" data-transition="fade">Search</a>
+		
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<ul data-role="listview" id="artlist" data-filter="true">
+			 <!-- put <li></li> in here -->
+		</ul>	
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed">
+		<h4>Footer content</h4>
+	</div><!-- /footer -->
+
+</div><!-- /page -->
+
+
+
+<!--second page -->
+<div data-role="page" id="artdetails-page">
+
+    <div data-role="header" data-theme="b"><a href="#" data-rel="back" data-role="button">Go back</a>
+   		<h1>Artwork Details</h1>
+    </div>
+
+    <div data-role="content">
+    <form id = "artform">
+         <div class="ui-grid-a">
+           <div class="ui-block-a">
+             
+             <div class="ui-field-contain">
+			 <label for="artform-title">Title</label>
+			 <input type="text" name="artform-title"  id="artform-title" value = "" />
+		 	 </div>
+		 	 
+		 	 <div class="ui-field-contain">
+			 <label for="artform-date_created">Date Created</label>
+			 <input type="text" name="artform-date_created"  id="artform-date_created" value = "" />
+             </div>
+           
+           	 <div class="ui-field-contain">
+           	 <label for="artform-medium">Medium</label>
+			 <input type="text" name="artform-medium"  id="artform-medium" value = "" />
+			 </div>
+			 
+           	 <div class="ui-field-contain">
+           	 <label for="artform-dimensions">Dimensions</label>
+			 <input type="text" name="artform-dimensions"  id="artform-dimensions" value = "" /> 
+			 </div>
+			 
+			 <div class="ui-field-contain">
+			 <label for="artform-list_price">List Price</label>
+			 <input type="text" name="artform-list_price"  id="artform-list_price" value = "" />
+			 </div>
+			 
+			 <div class="ui-field-contain">
+			 <label for="artform-status">Status</label>
+			 <input type="text" name="artform-status"  id="artform-status" value = "" />
+			 </div>
+			 
+			 
+			 
+            </div>
+            <div class="ui-block-b">
+            
+            <div class="ui-field-contain">
+            <label>Image</label>
+            <img id="artform-image" src="/static/images/blank.gif" style="width:200px; height:175px" />
+            </div>
+            
+             <div class="ui-field-contain">
+             <label for="artform-notes">Notes</label>
+			 <textarea  name="artform-notes"  id="artform-notes"></textarea>
+			 </div>
+			 
+           </div>
+        </form>
+          
+    </div>
+
+</div>
+
+
+
+
+</body>
+</html>
