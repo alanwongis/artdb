@@ -7,6 +7,8 @@
 	<title>Multi-page template</title>
 	<link rel="stylesheet" href="./jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 	
+	<link rel="stylesheet" href="/static/artform.css">
+	
 	<!--
 	<link rel="shortcut icon" href="../favicon.ico">
 	-->
@@ -55,9 +57,12 @@
     </div>
 
     <div data-role="content">
-    <form id = "artform">
+    <div class="messageBox" id="artdetails-saved-message">Saved</div>
+    <form id = "artform" data-ajax="false" >
          <div class="ui-grid-a">
            <div class="ui-block-a">
+           
+           	 <input type = "hidden" name="artform-id" id="artform-id" value="" />
              
              <div class="ui-field-contain">
 			 <label for="artform-title">Title</label>

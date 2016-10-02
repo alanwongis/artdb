@@ -4,6 +4,8 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Date, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine, select, desc
+from formencode import Schema, validators
+
 
 Base = declarative_base()
 
@@ -111,6 +113,22 @@ def format_date(date):
 def date_string(date):
     return 
 
+# validators
+
+
+class ArtworkSchema(Schema):
+    
+    title = validators.String(if_missing = None)
+    date_created = validators.String(if_missing = None)
+    list_price = validators.Int(if_missing = None)
+    dimensions = validators.String(if_missing = None)
+    notes = validators.String(if_missing = None)
+
+
+
+# API to the database
+
+
 
 def create_artwork():
     pass
@@ -120,10 +138,14 @@ def update_artwork(ident, **kwargs):
     ident = int(ident)
     s = session()
     artwork = s.query(Artwork).filter(Artwork.id == ident).one()
+
+    values = ArtworkSchema(allow_extra_fields = True).to_python(kwargs)
+    print values
     artwork.title = kwargs["title"]   
     #artwork.list_price = int(kwargs["list_price"])
     #artwork.medium = kwargs["medium"]
     s.commit()
+    
     
 
 def delete_artwork(ident):
@@ -163,7 +185,9 @@ def list_artworks(name_filter="", start_date=None,
     query = query.order_by(desc(Artwork.date_created))
     rows = query.all()
     for artwork, image in rows:
-        results.append( [artwork.id, artwork.title, format_date(artwork.date_created), image.hash_name] )
+        results.append( [artwork.id, artwork.title,
+                         format_date(artwork.date_created),
+                         image.hash_name, artwork.status] )
     return results
 
 

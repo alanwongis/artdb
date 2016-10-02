@@ -1,0 +1,12 @@
+.messageBox {
+	width:150px;
+	padding:30px;
+	border:4px solid #666;
+	text-align: center;
+	background: #ffa;
+	position:fixed;
+	right:45%;
+	top: 45%;
+	z-index:999;
+	-webkit-border-radius: 6px; -moz-border-radius: 6px;
+}
