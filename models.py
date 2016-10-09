@@ -1,10 +1,16 @@
 import os
 import sys
+import StringIO
+import hashlib
+import datetime
+
 from sqlalchemy import Column, ForeignKey, Integer, String, Date, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine, select, desc
 from formencode import Schema, validators
+
+from PIL import Image, ImageOps
 
 
 Base = declarative_base()
@@ -109,6 +115,24 @@ def format_date(date):
     return MONTH_NAME[date.month-1]+" "+str(date.day)+" "+str(date.year)
 
 
+
+def process_image(filename, img_data):
+    # read the image file
+    # get the md5 hash(use as a filename)
+    # resize the image to 800x600
+    # save to images folder
+    # create a 80x80 thumbnail
+    # save to the thumbs folder
+    # return the hash
+    im = Image.open(StringIO.StringIO(img_data))
+    new_filename = str(hashlib.md5(img_data).hexdigest())
+    new_image = im.copy()
+    new_image.thumbnail((800,600), Image.ANTIALIAS)
+    new_image.save("./static/images/"+new_filename+".jpg")
+    thumb_image = ImageOps.fit(im, (80,80), Image.ANTIALIAS)
+    thumb_image.save("./static/thumbs/"+new_filename+"_tb.jpg")
+    return new_filename
+    
 
 def date_string(date):
     return 

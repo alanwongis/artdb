@@ -1,6 +1,8 @@
 import cherrypy
 import json
 import os
+import shutil
+
 import models
 from models import Artwork, People, Location, Consignment, Purchase
 
@@ -100,7 +102,70 @@ class ArtworkAPI(object):
         else:
             cherrypy.response.status = 404
 
+
+class ArtImageAPI(object):
+    exposed = True
+
+    
+    def POST(self, ident="", img_file=""):
+        body = cherrypy.request.body
+        print ident
+        print body.length
+##        dest = os.path.join("/Users/alanwong/Desktop/artdbenv/artdb/temp/result.jpg")
+##        with open(dest, "wb") as f:
+##            shutil.copyfileobj(body, f)
+        data = ""
+        while True:
+            chunk = body.read(8192)
+            if not chunk:
+                break
+            else:
+                data = data + chunk
+                size = size +len(chunk)
             
+        cherrypy.response.status = 201
+
+
+        
+ #   @cherrypy.tools.json_in()
+    #@cherrpy.tools.authorize_all()
+    def PUT(self, ident="", **kwargs):
+        """ expected endpoint is /image/{artwork_id} where the data is a
+        FormData header with a field '0' holding the image file data.
+        
+        On success return the url of the new image"""
+        result = False
+        # process the image
+        if '0' in kwargs:
+            fileUpload = kwargs['0']
+            print fileUpload.filename
+        
+            size = 0
+            data = ""
+
+
+            while True:
+                chunk = fileUpload.file.read(8192)
+                if not chunk:
+                    break
+                else:
+                    data = data + chunk
+                    size = size + len(chunk)
+                
+            print "Image upload "+ str(size)
+        
+ #           img_hash = "54c15bb1c9adb66c8ed49954913271a.jpg"
+            img_hash = models.process_image(fileUpload.filename, data)
+            result = True
+            
+            
+        if result:
+            cherrypy.response.headers['Location'] = "/static/images/"+ img_hash
+            cherrypy.response.status = 201 # "created"
+        else:
+            cherrypy.response.status = 404
+
+ 
 
  
 if __name__ == "__main__":
@@ -124,4 +189,5 @@ if __name__ == "__main__":
 
     cherrypy.tree.mount(ArtworkIndexAPI(), '/artworks', rest_conf)
     cherrypy.tree.mount(ArtworkAPI(), '/artwork', rest_conf)
+    cherrypy.tree.mount(ArtImageAPI(), '/image', rest_conf)
     cherrypy.quickstart(Root(), '/', root_conf)

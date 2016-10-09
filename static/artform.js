@@ -125,7 +125,11 @@ $.getJSON("/artwork/"+form_values['artform-id'], function(artwork) {
 	    success: function() {
 	   	    // on success, display a "Saved" message
 			$("#artdetails-saved-message").show().delay(1250).fadeOut();
-		}
+		},
+		error: function() {
+			// on failure, display a warning
+			$("#artdetails-failed-message").show().delay(2500).fadeOut();
+	    }
 	});
 	
 	return status;
@@ -136,8 +140,6 @@ $.getJSON("/artwork/"+form_values['artform-id'], function(artwork) {
 
 $('#artdetails-save-btn').bind('click', save_art_details);
 
-
-
 //use pagebeforeshow
 //DONT USE PAGEINIT! 
 //the reason is you want this to happen every single time
@@ -145,6 +147,7 @@ $('#artdetails-save-btn').bind('click', save_art_details);
 $(document).on("pagebeforeshow", "#artdetails-page", function () {
 
 	$("#artdetails-saved-message").hide(); // invisible
+	$("#artdetails-failed-message").hide();
 	
 	//get from data - you put this here when the "a" wa clicked in the previous page
 	var info = $(this).data("info");
@@ -157,6 +160,97 @@ $(document).on("pagebeforeshow", "#artdetails-page", function () {
 	}).promise().done();
 	
 });
+
+
+// image file upload functions
+
+var files;
+
+$('#artform-image-file').on('change', prepareUpload);
+$('#artform-image-file-submit').on('click', submitImageUpload);
+
+function prepareUpload(event) {
+    console.log(event.target.files);
+	files = event.target.files;
+}
+
+
+
+
+function submitImageUpload_old(event) {
+	var data = new FormData();
+	
+    // START A LOADING SPINNER HERE
+
+    // Create a formdata object and add the files
+    var data = new FormData(this);
+    $.each(files, function(key, value) {
+        data.append(key, value);
+    });
+    
+    var request = new XMLHttpRequest();
+    request.open("PUT", "/image/1", true);
+    request.onload = function(event) {
+    	if (request.status == 200) {
+    		console.log("Success");
+    	} else {
+    		console.log("No success uploading");
+        }
+    }
+    request.send(data);
+    event.preventDefault();
+    
+}
+
+
+
+function submitImageUpload(event) {
+	event.stopPropagation(); // Stop stuff happening
+    event.preventDefault(); // Totally stop stuff happening
+
+    // START A LOADING SPINNER HERE
+
+    // Create a formdata object and add the files
+    var data = new FormData(this);
+    $.each(files, function(key, value) {
+        data.append(key, value);
+    });
+    
+    console.log(files);
+	console.log(JSON.stringify(data));
+	
+    $.ajax({
+        url: '/image/1',
+        type: 'PUT',
+        data: data,
+        cache: false,
+        //dataType: 'json',
+        // headers: {
+//  	        "Accept": "application/json",
+//  	        "Content-Type" : "application/json"
+//   	    },
+  	    mimeType: "multipart/form-data",
+        processData: false, // Don't process the files into a query string
+        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+        success: function() {
+            if(typeof data.error === 'undefined') {
+                // Success so call function to process the form
+                // image_upload_success(event, data);
+                console.log("SUCCESS upload");
+            } else {
+                // Handle errors here
+                console.log('ERRORS: ' + data.error);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // Handle errors here
+            console.log('ERRORS: ' + textStatus);
+            // STOP LOADING SPINNER
+        }
+    });
+}
+
+
 	
 	
 
