@@ -170,8 +170,28 @@ $('#artform-image-file').on('change', prepareUpload);
 $('#artform-image-file-submit').on('click', submitImageUpload);
 
 function prepareUpload(event) {
+    var reader = new FileReader();
+    var image_type = /image.*/;
+    
+    reader.onloadend = function() {
+    	var img = reader.result;
+    	console.log("img data loaded");
+    		// show a preview
+		$('#artform-image-preview img').attr('src', img);
+    }
+    	
     console.log(event.target.files);
 	files = event.target.files;
+	var file = files[0];
+	if (file.type.match(image_type)) {
+	    
+	    console.log("is image file");
+		reader.readAsDataURL(file);	 // .. then let the .onloadend callback(see above) handle the rest   
+	    
+	} else {
+	    console.log("not an image file");
+     	$("#artform-image-preview img").attr('src', "/static/images/blank.gif");
+     }
 }
 
 

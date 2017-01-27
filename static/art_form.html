@@ -57,8 +57,11 @@
     </div>
 
     <div data-role="content">
-    <div class="messageBox" id="artdetails-saved-message">Saved</div>
-    <div class="messageBox" id="artdetails-failed-message">Can't connect to server-Not Saved</div>
+    
+        <!-- hidden normally -->
+    	<div class="messageBox" id="artdetails-saved-message">Saved</div>
+    	<div class="messageBox" id="artdetails-failed-message">Can't connect to server-Not Saved</div>
+    
     <form id = "artform" data-ajax="false" >
          <div class="ui-grid-a">
            <div class="ui-block-a">
@@ -101,28 +104,34 @@
 			 <input type="text" name="artform-purchaser"  id="artform-purchaser" value = "" />
 			 </div>
 			 
-			  <div class="ui-field-contain">
+			<div class="ui-field-contain">
              <label for="artform-notes">Notes</label>
 			 <textarea  name="artform-notes"  id="artform-notes"></textarea>
 			 </div>
 			 
+			 
+			 <div name="artform-image-preview" id="artform-image-preview">
+				  <img src="/static/images/blank.gif" />
+			  </div>
+			  <input type="file" id = "artform-image-file" name = "fileUpload" />
+			  
+			  <button id="artform-image-file-submit">Upload New Image</button>	 
+			 
             </div>
+            
             <div class="ui-block-b">
             
-            <div class="ui-field-contain">
-            <img id="artform-image" src="/static/images/blank.gif" style="wdith: 25%; height: 25%; " />
-            </div>
-            
-            <div>
-                  <input type="file" id = "artform-image-file" name = "fileUpload" />
-                  <button id="artform-image-file-submit">Upload New Image</button>	 
-           </div>
+				<div class="ui-field-contain">
+				<img id="artform-image" src="/static/images/blank.gif" style="wdith: 25%; height: 25%; " />
+				</div> 
+           </div> <!-- block b -->
            
+           </div> <!-- grid -->
         </form>
           
-    </div>
+    </div> <!-- content -->
 
-</div>
+</div> <!-- page -->
 
 
 
