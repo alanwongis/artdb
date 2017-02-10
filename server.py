@@ -6,6 +6,10 @@ import shutil
 import models
 from models import Artwork, People, Location, Consignment, Purchase
 
+from jsonschema import validate
+
+
+
 
 
 # error message handler
@@ -31,17 +35,35 @@ class Root(object):
 class ArtworkIndexAPI(object):
     exposed = True
 
-
+    GET_VALIDATION = {
+        "type" : "object",
+        "properties": {
+            "start_date": { "type": "datetime" },
+            "end_date": { "type": "date" },
+            "name": { "type": "string" },
+            "limit": { "type": "int"},
+            "gallery": { "type": "string"},
+            "buyer": {  "type": "string"}
+        }
+    }
+            
     @cherrypy.tools.json_out()
     def GET(self, **kwargs):
         """List all items"""
 
-        filter_values = kwargs # filter by: 'start_date', 'end_date', 'name', 'limit'
-        result = models.list_artworks(filter_values)
+        filter_values = validate(kwargs, GET_VALIDATION) 
+        result = models.list_artworks(**filter_values)
         
         return result
 
-
+    
+    POST_VALIDATION = {
+        "type": "object",
+        "properties": {
+         }
+    }
+    
+    
     @cherrypy.tools.json_in()
     #@cherrypy.tools.authorize_all() 
     def POST(self):
