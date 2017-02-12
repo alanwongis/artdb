@@ -38,31 +38,34 @@ class ArtworkIndexAPI(object):
     GET_VALIDATION = {
         "type" : "object",
         "properties": {
-            "start_date": { "type": "datetime" },
-            "end_date": { "type": "date" },
+          #  "start_date": { "type": "datetime" },
+          #  "end_date": { "type": "date" },
             "name": { "type": "string" },
-            "limit": { "type": "int"},
+            "limit": { "type": "number"},
             "gallery": { "type": "string"},
             "buyer": {  "type": "string"}
         }
     }
             
-    @cherrypy.tools.json_out()
-    def GET(self, **kwargs):
-        """List all items"""
-
-        filter_values = validate(kwargs, GET_VALIDATION) 
-        result = models.list_artworks(**filter_values)
         
-        return result
-
-    
     POST_VALIDATION = {
         "type": "object",
         "properties": {
          }
     }
     
+    
+    
+    @cherrypy.tools.json_out()
+    def GET(self, **kwargs):
+        """List all items"""
+
+        filter_values = validate(kwargs, ArtworkIndexAPI.GET_VALIDATION) 
+        result = models.list_artworks()
+        
+        return result
+
+
     
     @cherrypy.tools.json_in()
     #@cherrypy.tools.authorize_all() 
@@ -85,10 +88,8 @@ class ArtworkAPI(object):
     @cherrypy.tools.json_out()
     #@cherrpy.tools.authorize_all()
     def GET(self, *vpath):
-        """GET item/nnn"""
-        
+        """GET item/nnn"""  
         result = models.get_artwork(vpath[0])
-
         if result:
             cherrypy.response.status = 200
         else:
@@ -125,10 +126,11 @@ class ArtworkAPI(object):
             cherrypy.response.status = 404
 
 
+
 class ArtImageAPI(object):
     exposed = True
 
-    
+
     def POST(self, ident="", img_file=""):
         body = cherrypy.request.body
         print ident
@@ -161,26 +163,20 @@ class ArtImageAPI(object):
         if '0' in kwargs:
             fileUpload = kwargs['0']
             print fileUpload.filename
-        
             size = 0
             data = ""
-
-
             while True:
                 chunk = fileUpload.file.read(8192)
                 if not chunk:
                     break
                 else:
                     data = data + chunk
-                    size = size + len(chunk)
-                
+                    size = size + len(chunk)              
             print "Image upload "+ str(size)
-        
  #           img_hash = "54c15bb1c9adb66c8ed49954913271a.jpg"
             img_hash = models.process_image(fileUpload.filename, data)
             result = True
-            
-            
+           
         if result:
             cherrypy.response.headers['Location'] = "/static/images/"+ img_hash
             cherrypy.response.status = 201 # "created"
@@ -209,7 +205,7 @@ if __name__ == "__main__":
     }
 
 
-    cherrypy.tree.mount(ArtworkIndexAPI(), '/artworks', rest_conf)
-    cherrypy.tree.mount(ArtworkAPI(), '/artwork', rest_conf)
-    cherrypy.tree.mount(ArtImageAPI(), '/image', rest_conf)
+    cherrypy.tree.mount(ArtworkIndexAPI(), '/api/artworks', rest_conf)
+    cherrypy.tree.mount(ArtworkAPI(), '/api/artwork', rest_conf)
+    cherrypy.tree.mount(ArtImageAPI(), 'api/image', rest_conf)
     cherrypy.quickstart(Root(), '/', root_conf)

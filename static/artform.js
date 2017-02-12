@@ -38,11 +38,10 @@ $(document).on("pageinit", "#artlist-page", function () {
 
 
 $(document).on("pagebeforeshow", "#artlist-page",  function () {
-	
-	
+
 	// retrieve the data of all artworks and format 
 	// it into a clickable <ul><li> list
-	$.getJSON("/artworks", function(data) {
+	$.getJSON("/api/artworks", function(data) {
 		var li = ""
 		var num_items = data.length;
 		var title, date, image_hash, status;
@@ -114,7 +113,7 @@ $.getJSON("/artwork/"+form_values['artform-id'], function(artwork) {
 	
 	// send to the server
 	$.ajax({
-	    url: '/artwork/'+ new_data['id'],
+	    url: '/api/artwork/'+ new_data['id'],
 	    headers: {
 	        "Accept": "application/json",
 	        "Content-Type" : "application/json"
@@ -151,7 +150,7 @@ $(document).on("pagebeforeshow", "#artdetails-page", function () {
 	
 	//get from data - you put this here when the "a" wa clicked in the previous page
 	var info = $(this).data("info");
-	$.getJSON("/artwork/"+info, function(artwork) {
+	$.getJSON("/api/artwork/"+info, function(artwork) {
 
 		art_details_keys.forEach(function(key) {
 			$('[name='+'artform-'+ key +']', "#artform").val(artwork[key]);
@@ -209,7 +208,7 @@ function submitImageUpload_old(event) {
     });
     
     var request = new XMLHttpRequest();
-    request.open("PUT", "/image/1", true);
+    request.open("PUT", "/api/image/1", true);
     request.onload = function(event) {
     	if (request.status == 200) {
     		console.log("Success");
@@ -240,7 +239,7 @@ function submitImageUpload(event) {
 	console.log(JSON.stringify(data));
 	
     $.ajax({
-        url: '/image/1',
+        url: '/api/image/1',
         type: 'PUT',
         data: data,
         cache: false,
