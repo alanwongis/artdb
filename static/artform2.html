@@ -1,35 +1,104 @@
 <!DOCTYPE html>
-<html>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-<body>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+</head>
+
+  <style>
+    .art-thumb {
+        padding-right: 15px;
+    }
+  </style>
+
+<body ng-app="BlankApp" ng-cloak ng-controller="myCtrl"> 
+
+ <!--
+    Your HTML content here
+  -->  
+  
+    <md-content class="md-padding">
+        <md-nav-bar
+        md-selected-nav-item="currentNavItem"
+        nav-bar-aria-label="navigation links">
+        <md-nav-item md-nav-click="goto('page1')" name="page1">
+        Artworks
+        </md-nav-item>
+        <md-nav-item md-nav-click="goto('page2')" name="page2">
+        Consignments
+        </md-nav-item>
+        <md-nav-item md-nav-click="goto('page3')" name="page3">
+        Sales
+        </md-nav-item>
+    </md-content>
+    
+    <section layout="row" flex>
+
+    <md-sidenav
+    class="md-sidenav-left"
+    md-component-id="left"
+    md-is-locked-open="true"
+    md-whiteframe="4">
+
+    <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools">Sidenav Left</h1>
+    </md-toolbar>
+    <md-content layout-padding>
+    <md-button ng-click="close()" class="md-primary" hide-gt-md>
+      Close Sidenav Left
+    </md-button>
+    <p hide show-gt-md>
+      This sidenav is locked open on your device. To go back to the default behavior,
+      narrow your display.
+    </p>
+    </md-content>
+
+    </md-sidenav>
+    
+    <md-content flex layout-padding>
+    
+    <md-list-item class="md-3-line" ng-repeat="x in products" ng-click="null">
+        <img ng-src="\static\thumbs\{{x[3]}}_tb.jpg" class="art-thumb" />
+        <div class="md-list-item-text" layout="column">
+            <h3>{{x[1]}}</h3>
+            <p>{{x[2]}}</p>
+        </div>
+        
+    </md-list-item>
+    </md-content>
+ </section>
 
 
 
+ <!-- Angular Material requires Angular.js Libraries -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
 
+  <!-- Angular Material Library -->
+  <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+  
+  
+  
+  <!-- Your application bootstrap  -->
 <script>
-var app = angular.module("myList", []); 
-app.controller("myCtrl", function($scope) {
-    $scope.products = ["Milk", "Bread", "Cheese"];
-    $scope.addItem = function () {
-        $scope.products.push($scope.addMe);
-    }    
-});
+
+    /**
+     * You must include the dependency on 'ngMaterial' 
+     */
+    var app = angular.module('BlankApp', ['ngMaterial']);
+
+    app.controller("myCtrl", function($scope, $http) {
+        $http.get("/api/artworks").then(function(response) {
+            $scope.products = response.data;
+        });
+    });
 </script>
 
 
 
-
-
-
-<div ng-app="myList" ng-controller="myCtrl">
-  <ul>
-    <li ng-repeat="x in products">{{x}}</li>
-  </ul>
-  <input ng-model="addMe">
-  <button ng-click="addItem()">Add</button>
-</div>
-
-<p>Write in the input field to add items.</p>
 
 </body>
 </html>
