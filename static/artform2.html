@@ -4,6 +4,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Angular Material style sheet -->
   <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+  
+  <title>This is a Material App</title>
 </head>
 
   <style>
@@ -12,16 +14,12 @@
     }
   </style>
 
-<body ng-app="BlankApp" ng-cloak ng-controller="myCtrl"> 
+<body ng-app="BlankApp" ng-controller="myCtrl" layout="column"> 
 
  <!--
     Your HTML content here
   -->  
-  
-    <md-content class="md-padding">
-        <md-nav-bar
-        md-selected-nav-item="currentNavItem"
-        nav-bar-aria-label="navigation links">
+    <md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
         <md-nav-item md-nav-click="goto('page1')" name="page1">
         Artworks
         </md-nav-item>
@@ -31,44 +29,34 @@
         <md-nav-item md-nav-click="goto('page3')" name="page3">
         Sales
         </md-nav-item>
-    </md-content>
+    </md-nav-bar>
+
     
-    <section layout="row" flex>
+    <div layout="row" flex>
 
-    <md-sidenav
-    class="md-sidenav-left"
-    md-component-id="left"
-    md-is-locked-open="true"
-    md-whiteframe="4">
+    <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="true" md-whiteframe="4">
 
-    <md-toolbar class="md-theme-indigo">
-        <h1 class="md-toolbar-tools">Sidenav Left</h1>
-    </md-toolbar>
-    <md-content layout-padding>
-    <md-button ng-click="close()" class="md-primary" hide-gt-md>
-      Close Sidenav Left
-    </md-button>
-    <p hide show-gt-md>
-      This sidenav is locked open on your device. To go back to the default behavior,
-      narrow your display.
-    </p>
-    </md-content>
+        <md-toolbar class="md-theme-indigo">
+            <h1 class="md-toolbar-tools">Sidenav Left</h1>
+        </md-toolbar>
+
+        <md-content layout-padding>
+            <p>There will be a search field here</p>
+        </md-content>
 
     </md-sidenav>
-    
-    <md-content flex layout-padding>
-    
-    <md-list-item class="md-3-line" ng-repeat="x in products" ng-click="null">
-        <img ng-src="\static\thumbs\{{x[3]}}_tb.jpg" class="art-thumb" />
-        <div class="md-list-item-text" layout="column">
-            <h3>{{x[1]}}</h3>
-            <p>{{x[2]}}</p>
-        </div>
-        
-    </md-list-item>
-    </md-content>
- </section>
 
+    <md-content flex layout-padding>
+        <md-list-item class="md-3-line" ng-repeat="x in products" ng-click="null">
+            <img ng-src="\static\thumbs\{{x[3]}}_tb.jpg" class="art-thumb" />
+            <div class="md-list-item-text" layout="column">
+                <h3>{{x[1]}}</h3>
+                <p>{{x[2]}}</p>
+            </div>    
+        </md-list-item>
+    </md-content>
+    
+ </div>
 
 
  <!-- Angular Material requires Angular.js Libraries -->
@@ -95,10 +83,8 @@
             $scope.products = response.data;
         });
     });
+    
 </script>
-
-
-
 
 </body>
 </html>
