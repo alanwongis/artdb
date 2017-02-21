@@ -37,33 +37,73 @@
     <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="true" md-whiteframe="4">
 
         <md-toolbar class="md-theme-indigo">
-            <h1 class="md-toolbar-tools">Sidenav Left</h1>
+            <h1 class="md-toolbar-tools">Actions</h1>
         </md-toolbar>
 
-        <md-content layout-padding>
-            <p>There will be a search field here</p>
+        <md-content layout-padding layout="column">
+            <md-button>Consignment</md-button>
+            <md-button>Sale</md-button>
+            <md-button>Other</md-button>
         </md-content>
 
     </md-sidenav>
-
-    <md-content flex layout-padding>
-      <md-input-container>
-        <label>Title</label>
-        <input type="text" />
-      </md-input-container>
-
-      <md-input-container>
-        <label>Medium</label>
-        <input type="text" />
-      </md-input-container>
-
-      <md-input-container>
-        <label>Date Created</label>
-        <md-datepicker>Jan 1 2017</md-datepicker>
-      </md-input-container>
-   
-
+    
+    <md-content layout-padding>
+        <form layout="column">
+        
+        <div>
+        <img src="/static/images/5576a94327b6a3023f440fbbdd8abc82.jpg" />
+        </div>
+        
+        <md-input-container>
+           <label>Title</label>
+            <input type="text" />
+        </md-input-container>
+        
+        <div layout="row">
+        <md-input-container>
+               <label>Medium</label>
+               <input type="text" />
+            </md-input-container>
+            
+            <md-input-container>
+               <label>Dimensions</label>
+               <input type="text" />
+            </md-input-container>
+            
+            <md-input-container>
+            <label>Date Created</label>
+            <md-datepicker ng-model="app.creation_date"></md-datepicker>
+            </md-input-container>
+        </div>
+        
+        <div layout="row">
+            <md-input-container>
+               <label>Status</label>
+               <input type="text" />
+            </md-input-container>
+            
+             <md-input-container>
+               <label>List Price</label>
+               <input type="text" />
+            </md-input-container>
+            
+            <md-input-container>
+               <label>Location</label>
+               <input type="text" />
+            </md-input-container>   
+        </div>
+        
+         <md-input-container>
+            <label>Notes</label>
+            <textarea rows="5"></textarea>
+         </md-input-container>
+        
+        
+        </form>
     </md-content>
+    
+   
     
  </div>
 
@@ -91,6 +131,8 @@
         $http.get("/api/artworks").then(function(response) {
             $scope.products = response.data;
         });
+        
+        this.creation_date = Date();
     });
     
 </script>
