@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- Angular Material style sheet -->
+		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+		<link rel="stylesheet" href="/static/style.css" />
+		
+		<title>Consignments</title>
+	
+	</head>
+
+
+
+	<body ng-app="BlankApp" ng-controller="myCtrl" layout="column"> 
+
+		<!--
+    Your HTML content here
+  -->  
+  
+  
+
+
+
+
+		<md-toolbar layout="row">
+			<div class="md-toolbar-tools" flex>
+				<md-button class="material-icons" aria-label="Settings">menu</md-button>
+	
+			</div>
+			<h3 flex>Consignments</h3>
+			
+		</md-toolbar>
+
+		
+
+		<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+			<md-nav-item md-nav-click="goto('page1')" name="page1">
+			Places
+			</md-nav-item>
+			<md-nav-item md-nav-click="goto('page2')" name="page2">
+			Works
+			</md-nav-item>
+		</md-nav-bar>
+		
+		<md-content>
+		
+			<md-grid-list md-cols="4" md-row-height="2:2">
+				<md-grid-tile>
+				<img src="\static\thumbs\0e4e62d9a555b6c9bf4bdb1414c1952a_tb.jpg" />
+				hello
+				</md-grid-tile>
+				<md-grid-tile>
+				<img src="\static\thumbs\6c16a05fc46b9f3b338d9ebde59b6089_tb.jpg" />
+
+				world
+				</md-grid-tile>
+				<md-grid-tile>
+				goodbye
+				</md-grid-tile>	
+				<md-grid-tile>
+				moon
+				</md-grid-tile>				
+			</md-grid-list>
+			
+		</md-content>
+
+		<!-- Angular Material requires Angular.js Libraries -->
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+		
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+		<!-- Angular Material Library -->
+		<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+
+		<!-- Your application bootstrap  -->
+		<script>
+
+    /**
+     * You must include the dependency on 'ngMaterial' 
+     */
+    var app = angular.module('BlankApp', ['ngMaterial']);
+
+    app.controller("myCtrl", function($scope, $http) {
+        $http.get("/api/artworks").then(function(response) {
+            $scope.products = response.data;
+        });
+    });
+
+		</script>
+
+	</body>
+
+</html>
+

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- Angular Material style sheet -->
+		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+		<link rel="stylesheet" href="/static/style.css" />
+		
+		<title>People/Places</title>
+	
+	</head>
+
+
+
+	<body ng-app="BlankApp" ng-controller="myCtrl" layout="column"> 
+
+		<!--
+    Your HTML content here
+  -->  
+  
+  <!--
+		<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+			<md-nav-item md-nav-click="goto('page1')" name="page1">
+        Artworks
+			</md-nav-item>
+			<md-nav-item md-nav-click="goto('page2')" name="page2">
+        Consignments
+			</md-nav-item>
+			<md-nav-item md-nav-click="goto('page3')" name="page3">
+        Sales
+			</md-nav-item>
+		</md-nav-bar>
+-->
+
+
+
+		<md-toolbar layout="row">
+			<div class="md-toolbar-tools" flex>
+				<md-toolbar-item>
+				<md-icon class="md-icon-menu" aria-label="Settings">menu</md-icon>
+				</md-toolbar-item>
+			</div>
+			<h3 flex>People/Places</h3>
+			
+		</md-toolbar>
+
+		<div flex layout="row" layout-padding>
+		
+			<md-content flex="25" layout="column" >
+				<md-list>
+				<md-list-item class="md-line-3" layout-margin layout-padding flex>
+					<md-icon class="material-icon" aria-label="Contact">person</md-icon>
+					<div class="md-list-item-text" layout="column">
+						<h4>John Doe</h4>
+						<p>1234 Main Street</p>
+					</div>
+				</md-list-item>
+				<md-list-item class="md-line-3" layout-margin layout-padding flex>
+					<md-icon class="material-icon" aria-label="Contact">person</md-icon>
+					<h4>Googenheim Museum</h4>
+				</md-list-item>
+				<md-list-item class="md-line-3" layout-margin layout-padding flex>
+					<md-icon class="material-icon" aria-label="Contact">person</md-icon>
+
+					<h4>Jane Doe</h4>
+				</md-list-item>	
+				</md-list>				
+			</md-content>
+			
+			<md-content flex="75" layout="column" md-whiteframe="2"  layout-padding>
+				<h4> Details</h4>
+				<table flex>	
+					<tr><th>Name</th><td> Johnathan Doughnut</td></tr>
+					<tr><th>Address</th><td>1234 Nosuch Road</td></tr>
+					<tr><th>Prov/State</th><td>ovbliss</td></tr>
+					<tr><th>Country</th><td>Undiscovered</td></tr>
+					<tr><th>Postal Code</th><td>134145532</td></tr>
+					<tr><th>Primary Phone</th><td>1-800-987-6543</td></tr>
+					<tr><th>Secondary Phone</th><td>999-090-0900</td></tr>
+					<tr><th>Email</th><td>joedoe@google.com</td></tr>
+					<tr><th>Website</th><td>www.theholetruth.com</td></tr>
+				</table>
+				
+			</md-content>
+			
+			
+		</div>
+
+
+		<!-- Angular Material requires Angular.js Libraries -->
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+		
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+		<!-- Angular Material Library -->
+		<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+
+		<!-- Your application bootstrap  -->
+		<script>
+
+    /**
+     * You must include the dependency on 'ngMaterial' 
+     */
+    var app = angular.module('BlankApp', ['ngMaterial']);
+
+    app.controller("myCtrl", function($scope, $http) {
+        $http.get("/api/artworks").then(function(response) {
+            $scope.products = response.data;
+        });
+    });
+
+		</script>
+
+	</body>
+
+</html>
+

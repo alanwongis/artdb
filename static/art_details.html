@@ -1,175 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Angular Material style sheet -->
-  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
-  
-  <title>Details</title>
-</head>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- Angular Material style sheet -->
+		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css" />
 
-  <style>
-    .art-thumb {
-        padding-right: 15px;
-    }
-  </style>
-
-<body ng-app="BlankApp" ng-controller="myCtrl" layout-align="center"> 
-    <form>
-    
-    <!-- app div -->
-    <div layout="column">
-    
-    <div> <!-- top menu -->
-    <md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links" flex>
-        <md-nav-item md-nav-click="goto('page1')" name="page1">
-        &lt; Artworks
-        </md-nav-item>
-    </md-nav-bar>	
-    </div>
-    
-    
-    
-    <!--upper block for the image and artwork details -->
-    <div layout="column">  
-	  <!-- artwork image -->
-	 <div layout="column" layout-gt-md="row" layout-align="center center"  layout-wrap >
-	    <md-card flex>
-	      <img src="/static/images/5576a94327b6a3023f440fbbdd8abc82.jpg"/>
-	    </md-card>
-	    <div flex>
-		<input class="ng-hide" id="image_upload_id" type="file" />
-		<label for="image_upload_id" class="md-button"ng-click="upload_image_file()">Upload new image</label>
-	     </div>
-	 </div>
- 
-	  <!-- details -->
-	  <div layout="column">
-	    <md-input-container>
-               <label>Title</label>
-               <input type="text" value="The lovely painting"/>
-	    </md-input-container>
-        
-	    <div layout-xs="column" layout-gt-xs="row">
-	    <md-input-container flex>
-               <label>Medium</label>
-               <input type="text" value="Oil on canvas"/>
-            </md-input-container>
-            
-            <md-input-container flex>
-               <label>Dimensions(LxWxH)</label>
-               <input type="text" value="11x8x1"/>
-            </md-input-container>    
-	    </div>
-	    
-	    <div layout-xs="column" layout-gt-xs="row">
-             <md-input-container flex>
-               <label>List Price</label>
-               <input type="text" value="$100.00" />
-            </md-input-container>
-            
-            <md-input-container flex>
-	      <label>Date Created</label>
-	      <md-datepicker ng-model="app.creation_date"></md-datepicker>
-            </md-input-container>
-            </div>
-           
-	   <div layout-xs="column" layout-gt-xs="row">
-
-           <md-input-container flex="40">
-               <label>Status</label>
-               <input type="text" value="Available"/>
-          </md-input-container>
-           <md-input-container flex>
-               <label>Location</label>
-               <input type="text" value="Home"/>
-           </md-input-container>   
-           </div> 
-
-            
-        </div>
-       
-    </div> <!--image and details block -->
- 
-    
-       <!-- status(and change status buttons) -->
-     <div layout="row" layout-padding>
-          <md-input-container>
-               <label>Change</label>
-               <input type="text" />
-          </md-input-container>
-          <md-menu hide>
-	    <md-button>Change Status</md-button>
-	    <md-menu-item><md-button>Sell</md-button></md-menu-item>
-	    <md-menu-item><md-button>Consign</md-button></md-menu-item>
-	    <md-menu-item><md-button>Move</md-button></md-menu-item>
-	    <md-menu-item><md-button>Change Status</md-button></md-menu-item>
-	  </md-menu>
-     </div>
-       
-        
-      <!--status details -->
-      <div layout="row" layout-padding>
-	   <md-input-container>
-               <label>Buyer</label>
-               <input type="text" />
-            </md-input-container>
-               
-            <md-input-container>
-               <label>Sale Price</label>
-               <input type="text" />
-            </md-input-container>
-            
-            <md-input-container>
-	        <label>Sale Date</label>
-                <md-datepicker ng-model="app.creation_date"></md-datepicker>
-            </md-input-container>      
-      </div>
-     
-     <!-- notes -->
-     <div layout = "column" layout-padding>  
-         <md-input-container>
-            <label>Notes</label>
-            <textarea rows="5"></textarea>
-         </md-input-container>
-     </div>
-  
-  
-     </div> <!-- app div -->
-  
-   </form>
+		<title>Details</title>
 
 
- <!-- Angular Material requires Angular.js Libraries -->
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+		<style>
+			.art-thumb {
+			padding-right: 15px;
+			}
+		</style>
+	</head>
+	<body ng-app="BlankApp" ng-controller="myCtrl" layout="column"> 
+		
+			
+			<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+				<md-nav-item md-nav-click="goto('page1')" name="page1">Artworks</md-nav-item>
+				<md-nav-item md-nav-click="goto('page2')" name="page">Consignments</md-nav-item>
+				<md-nav-item md-nav-click="goto('page3')" name="page3">Sales</md-nav-item>
+			</md-nav-bar>
 
-  <!-- Angular Material Library -->
-  <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
-  
-  
-  
-  <!-- Your application bootstrap  -->
-   <script>
+			<md-toolbar layout="row">
+				<md-button aria-label="Go Back">Back</md-button>
+				<span flex></span>
+				<md-button ng-disabled="true">Cancel</md-button>
+				<md-button class="md-raised" ng-disabled="true">Save</md-button>
+			</md-toolbar>
+			<form layout="column">
+				<md-content flex layout-padding>
 
-    /**
-     * You must include the dependency on 'ngMaterial' 
-     */
-    var app = angular.module('BlankApp', ['ngMaterial']);
+					<div layout="column" layout-gt-md="row" layout-align="center center" flex >
+						<md-card flex>
+							<img src="/static/images/5576a94327b6a3023f440fbbdd8abc82.jpg"/>
+						</md-card>
+						<div flex>
+							<input class="ng-hide" id="image_upload_id" type="file" />
+							<label for="image_upload_id" class="md-button"ng-click="upload_image_file()">Upload new image</label>
+						</div>
+					</div>
 
-    app.controller("myCtrl", function($scope, $http) {
-        $http.get("/api/artworks").then(function(response) {
-            $scope.products = response.data;
-        });
-        
-        this.creation_date = Date();
-    });
-    
-   </script>
+					<div layout="column" flex>
+						<md-input-container flex layout-padding>
+							<label>Title</label>
+							<input type="text" value="The lovely painting"/>
+						</md-input-container>
+
+						<div layout="column" layout-gt-xs="row" layout-padding>
+							<md-input-container flex>
+								<label>Medium</label>
+								<input type="text" value="Oil on canvas"/>
+							</md-input-container>
+
+							<md-input-container flex>
+								<label>Dimensions(LxWxH)</label>
+								<input type="text" value="11x8x1"/>
+							</md-input-container>    
+						</div>
+
+						<div layout-xs="column" layout-gt-xs="row" layout-padding>
+							<md-input-container flex>
+								<label>List Price</label>
+								<input type="text" value="100.00" />
+							</md-input-container>
+
+							<md-input-container flex>
+								<label>Date Created</label>
+								<md-datepicker ng-model="app.creation_date" />
+							</md-input-container>
+						</div>
+
+						<div layout-xs="column" layout-gt-xs="row" layout-padding>
+							<md-input-container flex>
+								<label>Status</label>
+								<input type="text" value="Available"/>
+							</md-input-container>
+							<md-input-container flex>
+								<label>Location</label>
+								<input type="text" value="Home"/>
+							</md-input-container>   		
+						</div>
+
+					</div>
+				
+					<div layout="column" layout-gt-xs="row" layout-padding>
+						<md-input-container flex>
+							<label>Buyer</label>
+							<input type="text" />
+						</md-input-container>
+
+						<md-input-container flex>
+							<label>Sale Price</label>
+							<input type="text" />
+						</md-input-container>
+
+						<md-input-container flex>
+							<label>Sale Date</label>
+							<md-datepicker ng-model="app.creation_date"/>
+						</md-input-container>      
+					</div>
+
+					<div layout = "column" layout-padding>  
+						<md-input-container flex>
+							<label>Notes</label>
+							<textarea rows="5"></textarea>
+						</md-input-container>
+					</div>
+
+				</md-content>
 
 
-</body>
+
+		</form>
+
+		<!-- Angular Material requires Angular.js Libraries -->
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+		<!-- Angular Material Library -->
+		<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+		<!-- Your application bootstrap  -->
+		<script>
+			/**
+			* You must include the dependency on 'ngMaterial' 
+			*/
+			var app = angular.module('BlankApp', ['ngMaterial']);
+
+			app.controller("myCtrl", function($scope, $http) {
+				$http.get("/api/artworks").then(function(response) {
+					$scope.products = response.data;
+				});
+				this.creation_date = Date();
+			});
+		</script>
+
+	</body>
 </html>
-

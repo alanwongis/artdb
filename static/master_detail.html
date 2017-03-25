@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- Angular Material style sheet -->
+		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+		<link rel="stylesheet" href="/static/style.css" />
+		
+		<title>Master/Detail</title>
+	
+	</head>
+
+
+
+	<body ng-app="BlankApp" ng-controller="myCtrl" layout="column"> 
+
+		<!--
+    Your HTML content here
+  -->  
+  
+  <!--
+		<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+			<md-nav-item md-nav-click="goto('page1')" name="page1">
+        Artworks
+			</md-nav-item>
+			<md-nav-item md-nav-click="goto('page2')" name="page2">
+        Consignments
+			</md-nav-item>
+			<md-nav-item md-nav-click="goto('page3')" name="page3">
+        Sales
+			</md-nav-item>
+		</md-nav-bar>
+-->
+
+
+
+		<md-toolbar layout="row">
+			<div class="md-toolbar-tools" flex="10">
+				<md-icon aria-label="Menu" class="material-icons">menu</md-icon>
+			</div>
+			<h3 flex="90">Artworks</h3>
+
+		</md-toolbar>
+
+		<div layout="row" flex>
+
+			<md-sidenav class="md-sidenav-left" md-component-id="left"  md-whiteframe="4">
+
+				<md-toolbar class="md-theme-indigo">
+					<h1 class="md-toolbar-tools">Sidenav Left</h1>
+				</md-toolbar>
+
+				<md-content layout-padding>
+					<p>There will be a search field here</p>
+				</md-content>
+
+			</md-sidenav>
+
+			<md-content flex="33" layout-padding>
+
+				<md-list-item class="md-3-line" ng-repeat="x in products" ng-click="null" layout-margin layout-padding>
+					
+					<img ng-src="\static\thumbs\{{x[3]}}_tb.jpg" class="art-thumb" style="size: 50%;" >
+					<div class="md-list-item-text" layout="column" flex="75">
+						<h3>{{x[1]}}</h3>
+						<p>{{x[2]}}</p>
+					</div>    
+				</md-list-item>
+			</md-content>
+
+			
+			<md-content id="details_pane" flex="66" layout="column" layout-align="center" >
+				<div flex layout="row" layout-align="center">
+					<md-button>Sell</md-button>
+					<md-button>Consign</md-button>
+					<md-button>Edit</md-button>
+				</div>
+	
+				<md-card flex layout-margin layout-padding>
+					<img ng-src="/static/images/5576a94327b6a3023f440fbbdd8abc82.jpg"  />
+				</md-card>
+				<md-card flex layout-align="center fill" layout-margin>
+				<table flex layout-fill>
+				<tr>
+					<th>Title</th>
+					<td>A Painting</td>
+					<th>Status</th>
+					<td>Available</td>
+				</tr>
+				<tr>
+					<th>Date</th>
+					<td>June 1, 2010</td>
+					<th>Location</th>
+					<td>Home</td>
+				</tr>
+				<tr>
+					<th>Dimensions</th>
+					<td>11x8x1</td>
+					<th>Buyer/Consignee</th>
+					<td>None</td>
+				</tr>
+				<tr>
+					<th>List Price</th>
+					<td>$100</td>
+					<th>Sale/Consign Date</th>
+					<td>None</td>
+				</tr>
+				<tr>
+					<th>Notes</th>
+					<td colspan="3">This is such a great painting that I want to have it on my wall</td>
+				</tr>
+				</table>
+				</md-card>
+				
+
+			</md-content>
+
+		</div>
+
+
+		<!-- Angular Material requires Angular.js Libraries -->
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+		
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+		<!-- Angular Material Library -->
+		<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+
+		<!-- Your application bootstrap  -->
+		<script>
+
+    /**
+     * You must include the dependency on 'ngMaterial' 
+     */
+    var app = angular.module('BlankApp', ['ngMaterial']);
+
+    app.controller("myCtrl", function($scope, $http) {
+        $http.get("/api/artworks").then(function(response) {
+            $scope.products = response.data;
+        });
+    });
+
+		</script>
+
+	</body>
+
+</html>
+

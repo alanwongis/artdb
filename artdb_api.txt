@@ -1,0 +1,127 @@
+
+
+GET /api/artworks 	
+	Lists artwork records matching then search criteria
+
+	Search Params(Optional):
+		title	
+		owner_name
+		status
+		from_date
+		to_date
+								
+POST /api/artworks
+	Creates a new artwork items
+					
+	Returns:
+		url = /artworks/new_id
+		new_id												
+							
+GET /api/artwork/{artwork_id}
+	Retrieves the record for the given {artwork_id}
+	
+	record = {
+		"title": {str},
+		"dimensions" : {str},
+		"price" : {decimal},
+		"status" : "available" | "consigned" | "sold" | "destroyed" | "other",
+		"image_id": {str},
+		"notes": {str},
+		"tags": {str}
+	}
+							
+PUT /api/artworks/{artwork_id}
+	Update the given record(same as the GET except no status and image_id fields)
+	
+	
+DELETE /api/artworks/{artwork/{artwork_id}
+
+
+
+GET /api/artimages
+	Retrieves a list of  artwork images
+
+GET /api/artimages/{artwork_id}
+	Retrieves the meta-info for the given images
+	
+	Returns:
+		"url": "/static/images/"+uuid
+		"thumb_url": "/static/thumbs/"+uuid
+		"filename": {str},
+		"date_entered": {datetime}
+		
+PUT /api/artimages/{artwork_id}
+	File upload destination
+	
+DELETE /api/artimages/{api/artworks/{artwork_id}
+	Deletes the given image
+	
+
+	
+	
+GET /api/consignments
+	Retrieves a list of consignments(with any applied filters)
+	
+POST /api/consignments
+	Creates a consignments, expectes a art_id and a place_id
+	
+GET /api/consignments/{consign_id}
+	Returns:
+		person_id,
+		artwork_id
+		start_date
+		end_date
+		notes
+
+PUT /api/consignments/{consign_id}
+
+DELETE /api/consignments/{consign_id}
+
+
+
+GET /api/sales
+	
+POST /api/sales
+	Expects an art_id, a people_id, and a sale amount
+	
+GET /api/sales/{sale_id}
+	Returns
+		buyer:
+		art_id
+		amount
+		date
+		notes
+
+PUT /api/salses/{sale_id}
+
+DELETE /api/sales/{sale_id}
+
+
+
+GET /api/contacts
+
+POST /api/contacts
+
+GET /api/contacts/{contact_id}
+	Returns:
+		name:
+		mailing_address:
+		primary_phone
+		secondary_phone
+		email
+		website
+		notes
+
+PUT /api/contacts/{contact_id}
+
+DELETE /api/contacts/{contact_id}
+
+
+
+
+	
+
+
+
+							
+							
