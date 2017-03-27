@@ -8,7 +8,6 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Date, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine, select, desc
-from formencode import Schema, validators
 
 from PIL import Image, ImageOps
 
@@ -136,17 +135,6 @@ def process_image(filename, img_data):
 
 def date_string(date):
     return 
-
-# validators
-
-
-class ArtworkSchema(Schema):
-    
-    title = validators.String(if_missing = None)
-    date_created = validators.String(if_missing = None)
-    list_price = validators.Int(if_missing = None)
-    dimensions = validators.String(if_missing = None)
-    notes = validators.String(if_missing = None)
 
 
 
