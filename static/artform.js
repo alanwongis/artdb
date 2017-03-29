@@ -41,7 +41,7 @@ $(document).on("pagebeforeshow", "#artlist-page",  function () {
 
 	// retrieve the data of all artworks and format 
 	// it into a clickable <ul><li> list
-	$.getJSON("/api/artworks", function(data) {
+	$.getJSON("/api/artwork", function(data) {
 		var li = ""
 		var num_items = data.length;
 		var title, date, image_hash, status;

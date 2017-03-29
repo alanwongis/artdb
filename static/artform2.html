@@ -79,7 +79,7 @@
     var app = angular.module('BlankApp', ['ngMaterial']);
 
     app.controller("myCtrl", function($scope, $http) {
-        $http.get("/api/artworks").then(function(response) {
+        $http.get("/api/artwork").then(function(response) {
             $scope.products = response.data;
         });
     });

@@ -82,13 +82,13 @@
 				</div>
 	
 				<md-card flex layout-margin layout-padding>
-					<img ng-src="/static/images/5576a94327b6a3023f440fbbdd8abc82.jpg"  style="width:80%; height:80%" />
+					<img ng-src="\static\images\{{curr_img_hash}}.jpg"  style="width:80%; height:80%" />
 				</md-card>
 				
 				<div layout-gt-sm="row" layout="column" flex layout-padding>
 					<div flex layout-wrap layout="row">
 						<div flex="33">Title</div>
-						<div flex="66">A Painting</div>
+						<div flex="66">{{curr_title}}</div>
 						<div flex="33">Date</div>
 						<div flex="66">Jan 1, 2001</div>
 						<div flex="33">Medium</div>
@@ -97,7 +97,7 @@
 						<div flex="66">11x8x1</div>						
 					</div>
 					<div flex layout-wrap layout="row">
-						<div flex="33">Ststus</div>
+						<div flex="33">Status</div>
 						<div flex="66">Available</div>
 						<div flex="33">Location</div>
 						<div flex="66">Home</div>
@@ -175,11 +175,18 @@
     var app = angular.module('BlankApp', ['ngMaterial']);
 
     app.controller("myCtrl", function($scope, $http) {
-        $http.get("/api/artworks").then(function(response) {
+        $http.get("/api/artwork").then(function(response) {
             $scope.products = response.data;
+			var first_rec = response.data[0];
+			$scope.curr_id = first_rec[0];
+			$scope.curr_title = first_rec[1];
+			$scope.curr_img_hash = first_rec[3];
         });
     });
 
+	
+	
+	
 		</script>
 
 	</body>

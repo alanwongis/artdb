@@ -4,7 +4,7 @@ import os
 import shutil
 
 import models
-from models import Artwork, People, Location, Consignment, Purchase
+from models import Artwork, Person, Location, Consignment, Purchase
 
 from jsonschema import validate
 
@@ -42,7 +42,7 @@ class ArtworkIndexAPI(object):
           #  "end_date": { "type": "date" },
             "name": { "type": "string" },
             "limit": { "type": "number"},
-            "gallery": { "type": "string"},
+            "location": { "type": "string"},
             "buyer": {  "type": "string"}
         }
     }
@@ -51,6 +51,12 @@ class ArtworkIndexAPI(object):
     POST_VALIDATION = {
         "type": "object",
         "properties": {
+            "title": { "type": "string"},
+            "dimensions": { "type": "string"},
+            "date_created": { "type": "date"},
+            "medium": { "type": "string"},
+            "list_price": {"type": "number"},
+            "notes": {"type": "string"}         
          }
     }
     
@@ -86,16 +92,35 @@ class ArtworkAPI(object):
     exposed = True
 
     @cherrypy.tools.json_out()
+    @cherrypy.tools.json_in()
     #@cherrpy.tools.authorize_all()
     def GET(self, *vpath):
-        """GET item/nnn"""  
-        result = models.get_artwork(vpath[0])
+        """GET /artwork index or individual item """
+        if len(vpath)==0: # get index
+            result =  models.list_artworks()
+        else:
+            result = models.get_artwork(vpath[0])
+            
         if result:
             cherrypy.response.status = 200
         else:
             cherrypy.response.status = 404
         return result
-    
+
+        
+    @cherrypy.tools.json_in()
+    #@cherrypy.tools.authorize_all() 
+    def POST(self):
+        """Create a new item(optionally using input values), returning location"""
+
+        args = cherrypy.request.json
+        print str(args)
+        #ident = models.create_artwork(args)
+        ident = 100
+        
+        cherrypy.response.headers['Location'] = "/artwork/"+ str(ident)
+        cherrypy.response.status = 201 # "created"
+
 
     @cherrypy.tools.json_in()
     #@cherrpy.tools.authorize_all()
@@ -205,7 +230,7 @@ if __name__ == "__main__":
     }
 
 
-    cherrypy.tree.mount(ArtworkIndexAPI(), '/api/artworks', rest_conf)
+    #cherrypy.tree.mount(ArtworkIndexAPI(), '/api/artworks', rest_conf)
     cherrypy.tree.mount(ArtworkAPI(), '/api/artwork', rest_conf)
     cherrypy.tree.mount(ArtImageAPI(), 'api/image', rest_conf)
     cherrypy.quickstart(Root(), '/', root_conf)

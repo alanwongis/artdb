@@ -8,7 +8,6 @@ from sqlalchemy import Column, ForeignKey, Integer, String, Date, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine, select, desc
-from formencode import Schema, validators
 
 from PIL import Image, ImageOps
 
@@ -16,11 +15,15 @@ from PIL import Image, ImageOps
 Base = declarative_base()
 
 
-artwork_tag_association_table = Table("association", Base.metadata,
+artwork_tag_association_table = Table("artwork_tag_association", Base.metadata,
                                       Column("artwork_id", Integer, ForeignKey("artwork.id")),
                                       Column("tag_id", Integer, ForeignKey("tag.id"))
                                       )
 
+invoice_purchase_association_table = Table("invoice_purchase_association", Base.metadata,
+                                           Column("invoice_id", Integer, ForeignKey("invoice.id")),
+                                           Column("purchase_id", Integer, ForeignKey("purchase.id"))
+                                           )
 
 
 class Artwork(Base):
@@ -42,8 +45,8 @@ class Artwork(Base):
                         back_populates="artworks")
     
 
-class People(Base):
-    __tablename__ = 'people'
+class Person(Base):
+    __tablename__ = 'person'
     id = Column(Integer, primary_key = True)
     name = Column(String(255))
     address = Column(String(255))
@@ -58,19 +61,28 @@ class Location(Base):
     id = Column(Integer, primary_key = True)
     name = Column(String(255))
     address = Column(String(255))
-    contact_person = Column(Integer, ForeignKey('people.id'))
+    contact_person = Column(Integer, ForeignKey('person.id'))
     notes = Column(String(255)) 
                       
 class Purchase(Base):
     __tablename__= "purchase"
     id = Column(Integer, primary_key = True)
-    buyer_id = Column(Integer, ForeignKey('people.id'), primary_key = True)
+    buyer_id = Column(Integer, ForeignKey('person.id'), primary_key = True)
     artwork_id = Column(Integer, ForeignKey('artwork.id'), primary_key = True)
     purchase_price = Column(Integer)
     purchase_date = Column(String(32))
     notes = Column(String(255))
+    invoice_id = Column(Integer, ForeignKey('invoice.id'))
+    invoice = relationship("Invoice", back_populates="purchases")
     
-
+class Invoice(Base):
+    __tablename__ = "invoice"
+    id = Column(Integer, primary_key = True)
+    date = Column(Date)
+    notes = Column(String(255))
+    purchases = relationship("Purchase", back_populates = "invoice")
+    total = Column(Integer)
+    
 
 class Consignment(Base):
     __tablename__ = 'consignment'
@@ -79,6 +91,7 @@ class Consignment(Base):
     artwork_id = Column(Integer, ForeignKey('artwork.id'), primary_key = True)
     consignment_date = Column(String(32))
     notes = Column(String(255))
+
 
 class Tag(Base):
     __tablename__ = "tag"
@@ -137,17 +150,6 @@ def process_image(filename, img_data):
 def date_string(date):
     return 
 
-# validators
-
-
-class ArtworkSchema(Schema):
-    
-    title = validators.String(if_missing = None)
-    date_created = validators.String(if_missing = None)
-    list_price = validators.Int(if_missing = None)
-    dimensions = validators.String(if_missing = None)
-    notes = validators.String(if_missing = None)
-
 
 
 # API to the database
@@ -158,16 +160,13 @@ def create_artwork():
     pass
 
 
-def update_artwork(ident, **kwargs):
+def update_artwork(ident, title=None, list_price=None, medium=None,
+                   notes=None):
     ident = int(ident)
     s = session()
     artwork = s.query(Artwork).filter(Artwork.id == ident).one()
 
-    values = ArtworkSchema(allow_extra_fields = True).to_python(kwargs)
-    print values
-    artwork.title = kwargs["title"]   
-    #artwork.list_price = int(kwargs["list_price"])
-    #artwork.medium = kwargs["medium"]
+    artwork.title = title
     s.commit()
     
     
