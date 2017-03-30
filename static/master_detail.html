@@ -15,7 +15,7 @@
 
 
 
-	<body ng-app="BlankApp" ng-controller="myCtrl" layout="column"> 
+	<body ng-app="BlankApp" ng-controller="artworkListController" layout="column"> 
 
 		<!--
     Your HTML content here
@@ -61,7 +61,7 @@
 
 			<md-content flex="33" layout-padding>
 
-				<md-list-item class="md-3-line" ng-repeat="x in products" ng-click="null" layout-margin layout-padding>
+				<md-list-item class="md-3-line" ng-repeat="x in artwork_list" ng-click="null" layout-margin layout-padding>
 					
 					<img ng-src="\static\thumbs\{{x[3]}}_tb.jpg" class="art-thumb" style="size: 50%;" >
 					<div class="md-list-item-text" layout="column" flex="75">
@@ -90,7 +90,7 @@
 						<div flex="33">Title</div>
 						<div flex="66">{{curr_title}}</div>
 						<div flex="33">Date</div>
-						<div flex="66">Jan 1, 2001</div>
+						<div flex="66">{{curr_date}}</div>
 						<div flex="33">Medium</div>
 						<div flex="66">Oil on Canvas</div>
 						<div flex="33">Dimensions</div>
@@ -98,7 +98,7 @@
 					</div>
 					<div flex layout-wrap layout="row">
 						<div flex="33">Status</div>
-						<div flex="66">Available</div>
+						<div flex="66">{{curr_status}}</div>
 						<div flex="33">Location</div>
 						<div flex="66">Home</div>
 						<div flex="33">Buyer/Consignee</div>
@@ -172,18 +172,63 @@
     /**
      * You must include the dependency on 'ngMaterial' 
      */
-    var app = angular.module('BlankApp', ['ngMaterial']);
-
+	 
+	 // init the app
+    angular.module('BlankApp', ['ngMaterial', 'BlankApp.services', 'BlankApp.controllers']);
+	
+/**
     app.controller("myCtrl", function($scope, $http) {
         $http.get("/api/artwork").then(function(response) {
             $scope.products = response.data;
 			var first_rec = response.data[0];
 			$scope.curr_id = first_rec[0];
-			$scope.curr_title = first_rec[1];
-			$scope.curr_img_hash = first_rec[3];
         });
     });
 
+*/	
+	
+	// init any services
+	
+	angular.module('BlankApp.services', [])
+		.factory('artworkService', function($http) {
+			var artworkAPI = {};
+			
+			artworkAPI.get_all = function() {
+				return $http({
+					method: 'GET',
+					url: '/api/artwork'
+				});
+			}
+			
+			artworkAPI.get_by_id = function(ident) {
+				return $http({
+					method: 'GET',
+					url: '/api/artwork/'+ident
+				});
+			}
+			
+			return artworkAPI;
+		});
+
+		
+	
+	//init any  controllers
+	
+	angular.module('BlankApp.controllers', [])
+		.controller('artworkListController', function($scope,  artworkService) {
+			$scope.name_filter = null;
+			$scope.artwork_list = [];
+			artworkService.get_all().success(function(response) {
+				$scope.artwork_list = response;
+				$scope.curr_title = response[0][1];
+				$scope.curr_date = response[0][2];
+				$scope.curr_img_hash = response[0][3];
+				$scope.curr_status = response[0][4];
+			});
+		});
+	
+	
+	
 	
 	
 	
