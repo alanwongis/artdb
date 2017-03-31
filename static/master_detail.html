@@ -34,8 +34,7 @@
 			</md-nav-item>
 		</md-nav-bar>
 -->
-
-
+	
 
 		<md-toolbar layout="row">
 			<div class="md-toolbar-tools" flex="10">
@@ -61,12 +60,12 @@
 
 			<md-content flex="33" layout-padding>
 
-				<md-list-item class="md-3-line" ng-repeat="x in artwork_list" ng-click="null" layout-margin layout-padding>
+				<md-list-item class="md-3-line" ng-repeat="item in artwork_list" ng-click="show_detail(item)" layout-margin layout-padding>
 					
-					<img ng-src="\static\thumbs\{{x[3]}}_tb.jpg" class="art-thumb" style="size: 50%;" >
+					<img ng-src="\static\thumbs\{{item[3]}}_tb.jpg" class="art-thumb" style="size: 50%;" >
 					<div class="md-list-item-text" layout="column" flex="75">
-						<h3>{{x[1]}}</h3>
-						<p>{{x[2]}}</p>
+						<h3>{{item[1]}}</h3>
+						<p>{{item[2]}}</p>
 					</div>    
 				</md-list-item>
 			</md-content>
@@ -80,10 +79,10 @@
 					<md-button>Relocate</md-button>
 					<md-button>Edit</md-button>
 				</div>
-	
-				<md-card flex layout-margin layout-padding>
-					<img ng-src="\static\images\{{curr_img_hash}}.jpg"  style="width:80%; height:80%" />
-				</md-card>
+				
+				<div flex md-image-width>
+					<img ng-src="\static\images\{{curr_img_hash}}.jpg" style="width33%; height:33%;" />
+				</div>
 				
 				<div layout-gt-sm="row" layout="column" flex layout-padding>
 					<div flex layout-wrap layout="row">
@@ -107,54 +106,20 @@
 						<div flex="66">None</div>
 					</div>
 				</div>
-				
+			
 				<div  flex layout="column" layout-padding>
 					<div flex>Notes</div>
 					<div flex>This is a set of notes about this wonderful painting. I could go on and on about this piece of art...</div>
 				</div>
-				
-<!--				
-				<md-card flex layout-align="center fill" layout-margin>
-				<table flex layout-fill>
-				<tr>
-					<th>Title</th>
-					<td>A Painting</td>
-					<th>Status</th>
-					<td>Available</td>
-				</tr>
-				<tr>
-					<th>Date</th>
-					<td>June 1, 2010</td>
-					<th>Location</th>
-					<td>Home</td>
-				</tr>
-				<tr>
-					<th>Dimensions</th>
-					<td>11x8x1</td>
-					<th>Buyer/Consignee</th>
-					<td>None</td>
-				</tr>
-				<tr>
-					<th>List Price</th>
-					<td>$100</td>
-					<th>Sale/Consign Date</th>
-					<td>None</td>
-				</tr>
-				<tr>
-					<th>Notes</th>
-					<td colspan="3">This is such a great painting that I want to have it on my wall</td>
-				</tr>
-				</table>
-
--->
-				</md-card>
-				
+						
 
 			</md-content>
 
 		</div>
 
 
+	
+	
 		<!-- Angular Material requires Angular.js Libraries -->
 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
 		
@@ -216,15 +181,28 @@
 	
 	angular.module('BlankApp.controllers', [])
 		.controller('artworkListController', function($scope,  artworkService) {
+		
 			$scope.name_filter = null;
 			$scope.artwork_list = [];
+			
 			artworkService.get_all().success(function(response) {
 				$scope.artwork_list = response;
-				$scope.curr_title = response[0][1];
-				$scope.curr_date = response[0][2];
-				$scope.curr_img_hash = response[0][3];
-				$scope.curr_status = response[0][4];
+				$scope.show_detail(response[0]);
+				
 			});
+			
+			$scope.show_detail = function(item) {
+				var id = item[0];
+				artworkService.get_by_id(id).success(function(response) {
+					$scope.curr_title = response.title;
+					$scope.curr_date = response.date_created;
+					$scope.curr_img_hash = response.image_hash;
+					$scope.curr_status = response.status;
+					
+				});
+			};
+		
+			
 		});
 	
 	
