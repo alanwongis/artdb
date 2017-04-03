@@ -21,58 +21,31 @@
     Your HTML content here
   -->  
   
-  <!--
-		<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
-			<md-nav-item md-nav-click="goto('page1')" name="page1">
-        Artworks
-			</md-nav-item>
-			<md-nav-item md-nav-click="goto('page2')" name="page2">
-        Consignments
-			</md-nav-item>
-			<md-nav-item md-nav-click="goto('page3')" name="page3">
-        Sales
-			</md-nav-item>
-		</md-nav-bar>
--->
 	
 
-		<md-toolbar layout="row">
-			<div class="md-toolbar-tools" flex="10">
+		<md-toolbar>
+			<div class="md-toolbar-tools" layout-margin>
 				<md-icon aria-label="Menu" class="material-icons">menu</md-icon>
+				<h2 md-truncate flex>Artworks</h3>
 			</div>
-			<h3 flex="90">Artworks</h3>
-
 		</md-toolbar>
-
-		<div layout="row" flex>
-
-			<md-sidenav class="md-sidenav-left" md-component-id="left"  md-whiteframe="4">
-
-				<md-toolbar class="md-theme-indigo">
-					<h1 class="md-toolbar-tools">Sidenav Left</h1>
-				</md-toolbar>
-
-				<md-content layout-padding>
-					<p>There will be a search field here</p>
-				</md-content>
-
-			</md-sidenav>
-
-			<md-content flex="33" layout-padding>
+		
+		<div id=main-content" flex layout="row">
+			<md-content flex="33">
+				
 
 				<md-list-item class="md-3-line" ng-repeat="item in artwork_list" ng-click="show_detail(item)" layout-margin layout-padding>
 					
-					<img ng-src="\static\thumbs\{{item[3]}}_tb.jpg" class="art-thumb" style="size: 50%;" >
-					<div class="md-list-item-text" layout="column" flex="75">
+					<img ng-src="\static\thumbs\{{item[3]}}_tb.jpg" class="art-thumb" style="size: 50%; padding-right:10px;" >
+					<div class="md-list-item-text" layout="column" flex="75" layout-margin>
 						<h3>{{item[1]}}</h3>
 						<p>{{item[2]}}</p>
 					</div>    
 				</md-list-item>
+			
 			</md-content>
-
 			
-			<md-content id="details_pane" flex="66" layout="column" layout-align="center" >
-			
+			<md-content flex="66">
 				<div flex layout="row" layout-align="center">
 					<md-button>Sell</md-button>
 					<md-button>Consign</md-button>
@@ -80,9 +53,9 @@
 					<md-button>Edit</md-button>
 				</div>
 				
-				<div flex md-image-width>
-					<img ng-src="\static\images\{{curr_img_hash}}.jpg" style="width33%; height:33%;" />
-				</div>
+				<md-card  flex layout-align="center center" >
+					<img flex="50" ng-src="\static\images\{{curr_img_hash}}.jpg" />
+				</md-card>
 				
 				<div layout-gt-sm="row" layout="column" flex layout-padding>
 					<div flex layout-wrap layout="row">
@@ -100,7 +73,7 @@
 						<div flex="66">{{curr_status}}</div>
 						<div flex="33">Location</div>
 						<div flex="66">Home</div>
-						<div flex="33">Buyer/Consignee</div>
+						<div flex="33">Client</div>
 						<div flex="66">None</div>
 						<div flex="33">Consign/Sell Date</div>
 						<div flex="66">None</div>
@@ -111,12 +84,10 @@
 					<div flex>Notes</div>
 					<div flex>This is a set of notes about this wonderful painting. I could go on and on about this piece of art...</div>
 				</div>
-						
-
+				
 			</md-content>
-
+				
 		</div>
-
 
 	
 	
