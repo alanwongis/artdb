@@ -3,13 +3,12 @@ import json
 import os
 import shutil
 
+
 import models
-from models import Artwork, Person, Location, Consignment, Purchase
+from models import session, Artwork, Person, Location, Consignment, Purchase
 
 from jsonschema import validate
-
-
-
+from jsonschema.exceptions import ValidationError
 
 
 # error message handler
@@ -22,7 +21,7 @@ def error_page_default(status, message, trackback, version):
     return json.dumps(ret)
 
 
-	  
+      
 class Root(object):
     _cp_config = {'error_page_default': error_page_default }
 
@@ -34,33 +33,7 @@ class Root(object):
 
 class ArtworkIndexAPI(object):
     exposed = True
-
-    GET_VALIDATION = {
-        "type" : "object",
-        "properties": {
-          #  "start_date": { "type": "datetime" },
-          #  "end_date": { "type": "date" },
-            "name": { "type": "string" },
-            "limit": { "type": "number"},
-            "location": { "type": "string"},
-            "buyer": {  "type": "string"}
-        }
-    }
             
-        
-    POST_VALIDATION = {
-        "type": "object",
-        "properties": {
-            "title": { "type": "string"},
-            "dimensions": { "type": "string"},
-            "date_created": { "type": "date"},
-            "medium": { "type": "string"},
-            "list_price": {"type": "number"},
-            "notes": {"type": "string"}         
-         }
-    }
-    
-    
     
     @cherrypy.tools.json_out()
     def GET(self, **kwargs):
@@ -86,11 +59,36 @@ class ArtworkIndexAPI(object):
         cherrypy.response.headers['Location'] = "/artwork/"+ str(ident)
         cherrypy.response.status = 201 # "created"
 
-
+   
 
 class ArtworkAPI(object):
     exposed = True
-
+    
+    
+    PUT_VALIDATION = {
+        "type" : "object",
+        "properties": {
+            "title": { "type": "string" },
+            "list_price": { "type": "number"},
+            "medium": {"type": "string"},
+            "location": { "type": "string"},
+            "buyer": {  "type": "string"},
+            "notes": { "type": "string"}
+        }
+    }
+       
+    POST_VALIDATION = {
+        "type": "object",
+        "properties": {
+            "title": { "type": "string"},
+            "dimensions": { "type": "string"},
+            "date_created": { "type": "date"},
+            "medium": { "type": "string"},
+            "list_price": {"type": "number"},
+            "notes": {"type": "string"}         
+         }
+    }
+    
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
     #@cherrpy.tools.authorize_all()
@@ -128,14 +126,27 @@ class ArtworkAPI(object):
         """Update item/nnn with new values"""
         
         args = cherrypy.request.json
-        print ident, str(args)
-        result = models.update_artwork(ident, **args)
-        result = True
-        
+        print "before"
+        print str(args)
+        try:
+            s = session()
+            validate(args, ArtworkAPI.PUT_VALIDATION)
+            artwork = s.query(Artwork).get(int(ident))
+            for key, value in args.iteritems():
+                setattr(artwork, key, value)
+            s.commit()
+            result = True
+        except ValidationError as e:
+            error_msg = str(e)
+            result = False
+           
+          
+            
         if result:
             cherrypy.response.status = 204 # "success-return no content"
         else:
             cherrypy.response.status = 404
+            return error_msg
 
 
     @cherrypy.expose
@@ -149,6 +160,7 @@ class ArtworkAPI(object):
             cherrypy.response.status = 200 
         else:
             cherrypy.response.status = 404
+
 
 
 
@@ -198,7 +210,6 @@ class ArtImageAPI(object):
                     data = data + chunk
                     size = size + len(chunk)              
             print "Image upload "+ str(size)
- #           img_hash = "54c15bb1c9adb66c8ed49954913271a.jpg"
             img_hash = models.process_image(fileUpload.filename, data)
             result = True
            
@@ -233,4 +244,4 @@ if __name__ == "__main__":
     #cherrypy.tree.mount(ArtworkIndexAPI(), '/api/artworks', rest_conf)
     cherrypy.tree.mount(ArtworkAPI(), '/api/artwork', rest_conf)
     cherrypy.tree.mount(ArtImageAPI(), 'api/image', rest_conf)
-    cherrypy.quickstart(Root(), '/', root_conf)
+    cherrypy.quickstart(Root(), '/', root_conf)

@@ -14,7 +14,7 @@
 			}
 		</style>
 	</head>
-	<body ng-app="BlankApp" ng-controller="myCtrl" layout="column"> 
+	<body ng-app="BlankApp" ng-controller="artworkFormController" layout="column"> 
 		
 			
 			<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
@@ -34,7 +34,7 @@
 
 					<div layout="column" layout-gt-md="row" layout-align="center center" flex >
 						<md-card flex>
-							<img src="/static/images/5576a94327b6a3023f440fbbdd8abc82.jpg"/>
+							<img src="/static/images/{{img_hash}}.jpg"/>
 						</md-card>
 						<div flex>
 							<input class="ng-hide" id="image_upload_id" type="file" />
@@ -45,18 +45,18 @@
 					<div layout="column" flex>
 						<md-input-container flex layout-padding>
 							<label>Title</label>
-							<input type="text" value="The lovely painting"/>
+							<input type="text" ng-model="title"/>
 						</md-input-container>
 
 						<div layout="column" layout-gt-xs="row" layout-padding>
 							<md-input-container flex>
 								<label>Medium</label>
-								<input type="text" value="Oil on canvas"/>
+								<input type="text" ng-model="medium"/>
 							</md-input-container>
 
 							<md-input-container flex>
 								<label>Dimensions(LxWxH)</label>
-								<input type="text" value="11x8x1"/>
+								<input type="text" ng-model="dimensions"/>
 							</md-input-container>    
 						</div>
 
@@ -68,7 +68,7 @@
 
 							<md-input-container flex>
 								<label>Date Created</label>
-								<md-datepicker ng-model="app.creation_date" />
+								<md-datepicker ng-model="date_created" />
 							</md-input-container>
 						</div>
 
@@ -105,7 +105,7 @@
 					<div layout = "column" layout-padding>  
 						<md-input-container flex>
 							<label>Notes</label>
-							<textarea rows="5"></textarea>
+							<textarea rows="5">{{notes}}</textarea>
 						</md-input-container>
 					</div>
 
@@ -126,17 +126,77 @@
 
 		<!-- Your application bootstrap  -->
 		<script>
-			/**
-			* You must include the dependency on 'ngMaterial' 
-			*/
-			var app = angular.module('BlankApp', ['ngMaterial']);
 
-			app.controller("myCtrl", function($scope, $http) {
-				$http.get("/api/artworks").then(function(response) {
-					$scope.products = response.data;
+        
+	 // init the app
+    angular.module('BlankApp', ['ngMaterial', 'BlankApp.services', 'BlankApp.controllers']);
+	
+	
+	// init any services
+	
+	angular.module('BlankApp.services', [])
+		.factory('artworkService', function($http) {
+			var artworkAPI = {};
+			
+			artworkAPI.get_all = function() {
+				return $http({
+					method: 'GET',
+					url: '/api/artwork'
 				});
-				this.creation_date = Date();
+			}
+			
+			artworkAPI.get_by_id = function(ident) {
+				return $http({
+					method: 'GET',
+					url: '/api/artwork/'+ident
+				});
+			}
+            
+            artworkAPI.set = function(ident, values) {
+                return $http({
+                    method: 'PUT',
+                    url: '/api/artwork/'+ident,
+                    data: values
+                });
+			}
+            
+			return artworkAPI;
+		});
+
+		
+	
+	//init any  controllers
+	
+	angular.module('BlankApp.controllers', [])
+		.controller('artworkFormController', function($scope,  artworkService) {
+		
+			$scope.name_filter = null;
+			$scope.artwork_list = [];
+			
+			artworkService.get_all().success(function(response) {
+				$scope.artwork_list = response;
+				$scope.show_detail(response[0]);
+				
 			});
+			
+            
+			$scope.show_detail = function(item) {
+				var id = item[0];
+				artworkService.get_by_id(id).success(function(response) {
+                    console.log(response);
+					$scope.title = response.title;
+					$scope.date_created = new Date(response.date_created);
+                    $scope.medium = response.medium;
+					$scope.img_hash = response.image_hash;
+                    $scope.dimensions = response.dimensions;
+					$scope.status = response.status;
+                    $scope.notes = response.notes;
+				});
+			};
+		
+			
+		});
+
 		</script>
 
 	</body>

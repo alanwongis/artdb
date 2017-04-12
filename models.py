@@ -114,6 +114,8 @@ class ArtImage(Base):
     
 
 
+
+
 # sqlalchemy boilerplate
 engine = create_engine("sqlite:///artdb.sqlite")
 session = sessionmaker()
@@ -155,7 +157,6 @@ def date_string(date):
 # API to the database
 
 
-
 def create_artwork():
     pass
 
@@ -183,7 +184,7 @@ def get_artwork(ident):
         result = {}
         result["id"] = artwork.id
         result["title"] = artwork.title
-        result["date_created"] = str(artwork.date_created)
+        result["date_created"] = artwork.date_created.ctime()
         result["status"] = artwork.status
         result["list_price"] = artwork.list_price
         result["dimensions"] = artwork.dimensions
