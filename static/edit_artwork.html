@@ -27,7 +27,7 @@
 				<md-button aria-label="Go Back">Back</md-button>
 				<span flex></span>
 				<md-button ng-disabled="true">Cancel</md-button>
-				<md-button class="md-raised" ng-disabled="true">Save</md-button>
+				<md-button class="md-raised"ng-click="do_save()" >Save</md-button>
 			</md-toolbar>
 			<form layout="column">
 				<md-content flex layout-padding>
@@ -63,7 +63,7 @@
 						<div layout-xs="column" layout-gt-xs="row" layout-padding>
 							<md-input-container flex>
 								<label>List Price</label>
-								<input type="text" value="100.00" />
+								<input type="text" ng-model="list_price" />
 							</md-input-container>
 
 							<md-input-container flex>
@@ -75,11 +75,11 @@
 						<div layout-xs="column" layout-gt-xs="row" layout-padding>
 							<md-input-container flex>
 								<label>Status</label>
-								<input type="text" value="Available"/>
+								<input type="text" ng-model="status" />
 							</md-input-container>
 							<md-input-container flex>
 								<label>Location</label>
-								<input type="text" value="Home"/>
+								<input type="text" ng-model="location" />
 							</md-input-container>   		
 						</div>
 
@@ -88,17 +88,17 @@
 					<div layout="column" layout-gt-xs="row" layout-padding>
 						<md-input-container flex>
 							<label>Buyer</label>
-							<input type="text" />
+							<input type="text" ng-model="buyer" />
 						</md-input-container>
 
 						<md-input-container flex>
 							<label>Sale Price</label>
-							<input type="text" />
+							<input type="text" ng-model="sold_price" />
 						</md-input-container>
 
 						<md-input-container flex>
 							<label>Sale Date</label>
-							<md-datepicker ng-model="app.creation_date"/>
+							<md-datepicker ng-model="creation_date"/>
 						</md-input-container>      
 					</div>
 
@@ -129,7 +129,7 @@
 
         
 	 // init the app
-    angular.module('BlankApp', ['ngMaterial', 'BlankApp.services', 'BlankApp.controllers']);
+    angular.module('BlankApp', ['ngMaterial', 'BlankApp.services', 'BlankApp.controllers', 'BlankApp.directives']);
 	
 	
 	// init any services
@@ -152,7 +152,7 @@
 				});
 			}
             
-            artworkAPI.set = function(ident, values) {
+            artworkAPI.update = function(ident, values) {
                 return $http({
                     method: 'PUT',
                     url: '/api/artwork/'+ident,
@@ -163,27 +163,154 @@
 			return artworkAPI;
 		});
 
-		
+    // upload_image_file directive
+    
+    
+    angular.module('BlankApp.directives' [])
+         var controller('fileUploaderController', ['$scope', function($scope) {
+            console.log(fileReader)
+            $scope.getFile = function () {
+                $scope.progress = 0;
+                fileReader.readAsDataUrl($scope.file, $scope)
+                      .then(function(result) {
+                          $scope.imageSrc = result;
+                      });
+            };
+ 
+            $scope.$on("fileProgress", function(e, progress) {
+                $scope.progress = progress.loaded / progress.total;
+            });
+            
+        }])          
+        .directive('fileUploader', function() {
+            restrict: '',   // determine where the directive can be used
+            scope: {title: '@'},
+            template: '',
+            controller: '' ,
+            link: function($scope, element, attrs) { 
+                element.bind("change", function(e){
+                    $scope.file = (e.srcElement || e.target).files[0];
+                    $scope.getFile();
+                 }
+            }
+        });
+    
+    
+(function (module) {
+     
+    var fileReader = function ($q, $log) {
+ 
+        var onLoad = function(reader, deferred, scope) {
+            return function () {
+                scope.$apply(function () {
+                    deferred.resolve(reader.result);
+                });
+            };
+        };
+ 
+        var onError = function (reader, deferred, scope) {
+            return function () {
+                scope.$apply(function () {
+                    deferred.reject(reader.result);
+                });
+            };
+        };
+ 
+        var onProgress = function(reader, scope) {
+            return function (event) {
+                scope.$broadcast("fileProgress",
+                    {
+                        total: event.total,
+                        loaded: event.loaded
+                    });
+            };
+        };
+ 
+        var getReader = function(deferred, scope) {
+            var reader = new FileReader();
+            reader.onload = onLoad(reader, deferred, scope);
+            reader.onerror = onError(reader, deferred, scope);
+            reader.onprogress = onProgress(reader, scope);
+            return reader;
+        };
+ 
+        var readAsDataURL = function (file, scope) {
+            var deferred = $q.defer();
+             
+            var reader = getReader(deferred, scope);         
+            reader.readAsDataURL(file);
+             
+            return deferred.promise;
+        };
+ 
+        return {
+            readAsDataUrl: readAsDataURL  
+        };
+    };
+ 
+
+ 
+;
+    
+var UploadController = function ($scope, fileReader) {
+     console.log(fileReader)
+    $scope.getFile = function () {
+        $scope.progress = 0;
+        fileReader.readAsDataUrl($scope.file, $scope)
+                      .then(function(result) {
+                          $scope.imageSrc = result;
+                      });
+    };
+ 
+    $scope.$on("fileProgress", function(e, progress) {
+        $scope.progress = progress.loaded / progress.total;
+    });
+ 
+};
+
+
+
+
+
+app.directive("ngFileSelect",function(){
+
+  return {
+    link: function($scope,el){
+      
+      el.bind("change", function(e){
+      
+        $scope.file = (e.srcElement || e.target).files[0];
+        $scope.getFile();
+      })
+      
+    }
+    
+  }
+  
+  
+})
+        
+        
 	
-	//init any  controllers
+	//init controllers
 	
 	angular.module('BlankApp.controllers', [])
 		.controller('artworkFormController', function($scope,  artworkService) {
 		
 			$scope.name_filter = null;
 			$scope.artwork_list = [];
+            $scope.ident = 12;
 			
 			artworkService.get_all().success(function(response) {
 				$scope.artwork_list = response;
 				$scope.show_detail(response[0]);
 				
 			});
-			
             
 			$scope.show_detail = function(item) {
-				var id = item[0];
-				artworkService.get_by_id(id).success(function(response) {
+				artworkService.get_by_id($scope.ident).success(function(response) {
                     console.log(response);
+                    $scope.id = response.id;
 					$scope.title = response.title;
 					$scope.date_created = new Date(response.date_created);
                     $scope.medium = response.medium;
@@ -194,8 +321,22 @@
 				});
 			};
 		
-			
+			$scope.do_save = function() {
+                console.log("saving...");
+                var values = {
+                    "title": $scope.title,
+                    "medium": $scope.medium,
+                    "list_price": $scope.price,
+                    "notes": $scope.notes,
+                    "date_created": $scope.date_created
+                };
+                artworkService.update($scope.ident, values).success(function(response) {
+                    console.log("saved");
+                });                 
+            }
+            
 		});
+        
 
 		</script>
 

@@ -14,7 +14,6 @@ from PIL import Image, ImageOps
 
 Base = declarative_base()
 
-
 artwork_tag_association_table = Table("artwork_tag_association", Base.metadata,
                                       Column("artwork_id", Integer, ForeignKey("artwork.id")),
                                       Column("tag_id", Integer, ForeignKey("tag.id"))
@@ -25,6 +24,41 @@ invoice_purchase_association_table = Table("invoice_purchase_association", Base.
                                            Column("purchase_id", Integer, ForeignKey("purchase.id"))
                                            )
 
+#
+#helper functions
+#
+
+def format_date(date):
+    MONTH_NAME = ["January", "February", "March", "April", "May", "June",
+                  "July", "August", "September", "October", "November", "December"]
+    return MONTH_NAME[date.month-1]+" "+str(date.day)+" "+str(date.year)
+
+
+def deserialize_date(st):
+    return datetime.strptime(st, '%Y-%m-%dT%H:%M:%S.%fZ')
+
+
+def process_image(filename, img_data):
+    # read the image file
+    # get the md5 hash(use as a filename)
+    # resize the image to 800x600
+    # save to images folder
+    # create a 80x80 thumbnail
+    # save to the thumbs folder
+    # return the hash
+    im = Image.open(StringIO.StringIO(img_data))
+    new_filename = str(hashlib.md5(img_data).hexdigest())
+    new_image = im.copy()
+    new_image.thumbnail((800,600), Image.ANTIALIAS)
+    new_image.save("./static/images/"+new_filename+".jpg")
+    thumb_image = ImageOps.fit(im, (80,80), Image.ANTIALIAS)
+    thumb_image.save("./static/thumbs/"+new_filename+"_tb.jpg")
+    return new_filename
+
+
+#    
+# define the databases
+#
 
 class Artwork(Base):
     __tablename__ = 'artwork'
@@ -43,27 +77,44 @@ class Artwork(Base):
     tags = relationship("Tag", uselist = True,
                         secondary = artwork_tag_association_table,
                         back_populates="artworks")
-    
 
+    
 class Person(Base):
     __tablename__ = 'person'
     id = Column(Integer, primary_key = True)
-    name = Column(String(255))
-    address = Column(String(255))
+    title = Column(String(16))
+    first_name = Column(String(64))
+    last_name = Column(String(64))
+    address = Column(String(128))
+    city = Column(String(64))
+    state_prov = Column(String(64))
+    country = Column(String(64))
+    postal = Column(String(32))
     main_phone = Column(String(32))
     alt_phone = Column(String(32))
     cell_phone = Column(String(32))
+    company = Column(String(64))
+    email = Column(String(64))
     notes = Column(String(255))
-    
 
+    
 class Location(Base):
     __tablename__ = 'location'
     id = Column(Integer, primary_key = True)
     name = Column(String(255))
     address = Column(String(255))
+    city = Column(String(255))
+    state_prov = Column(String(255))
+    country = Column(String(255))
+    postal = Column(String(255))
+    phone = Column(String(32))
+    fax = Column(String(32))
+    website = Column(String(64))
+    email = Column(String(64))
     contact_person = Column(Integer, ForeignKey('person.id'))
     notes = Column(String(255)) 
-                      
+
+                     
 class Purchase(Base):
     __tablename__= "purchase"
     id = Column(Integer, primary_key = True)
@@ -74,15 +125,16 @@ class Purchase(Base):
     notes = Column(String(255))
     invoice_id = Column(Integer, ForeignKey('invoice.id'))
     invoice = relationship("Invoice", back_populates="purchases")
-    
+
+   
 class Invoice(Base):
     __tablename__ = "invoice"
     id = Column(Integer, primary_key = True)
     date = Column(Date)
     notes = Column(String(255))
     purchases = relationship("Purchase", back_populates = "invoice")
-    total = Column(Integer)
-    
+    total = Column(Integer)   
+
 
 class Consignment(Base):
     __tablename__ = 'consignment'
@@ -113,67 +165,20 @@ class ArtImage(Base):
     artwork = relationship("Artwork", back_populates = "image") # populates Artwork.images
     
 
-
-
-
+#
 # sqlalchemy boilerplate
+#
+
 engine = create_engine("sqlite:///artdb.sqlite")
 session = sessionmaker()
 session.configure(bind=engine)
 Base.metadata.create_all(engine)
 
 
-#helper functions
-def format_date(date):
-    MONTH_NAME = ["January", "February", "March", "April", "May", "June",
-                  "July", "August", "September", "October", "November", "December"]
-    return MONTH_NAME[date.month-1]+" "+str(date.day)+" "+str(date.year)
 
-
-
-def process_image(filename, img_data):
-    # read the image file
-    # get the md5 hash(use as a filename)
-    # resize the image to 800x600
-    # save to images folder
-    # create a 80x80 thumbnail
-    # save to the thumbs folder
-    # return the hash
-    im = Image.open(StringIO.StringIO(img_data))
-    new_filename = str(hashlib.md5(img_data).hexdigest())
-    new_image = im.copy()
-    new_image.thumbnail((800,600), Image.ANTIALIAS)
-    new_image.save("./static/images/"+new_filename+".jpg")
-    thumb_image = ImageOps.fit(im, (80,80), Image.ANTIALIAS)
-    thumb_image.save("./static/thumbs/"+new_filename+"_tb.jpg")
-    return new_filename
-    
-
-def date_string(date):
-    return 
-
-
-
+#
 # API to the database
-
-
-def create_artwork():
-    pass
-
-
-def update_artwork(ident, title=None, list_price=None, medium=None,
-                   notes=None):
-    ident = int(ident)
-    s = session()
-    artwork = s.query(Artwork).filter(Artwork.id == ident).one()
-
-    artwork.title = title
-    s.commit()
-    
-    
-
-def delete_artwork(ident):
-    pass
+#
 
 
 def get_artwork(ident):
@@ -182,6 +187,7 @@ def get_artwork(ident):
         s = session()
         artwork = s.query(Artwork).filter(Artwork.id == ident).one()
         result = {}
+        # serialize the results
         result["id"] = artwork.id
         result["title"] = artwork.title
         result["date_created"] = artwork.date_created.ctime()
@@ -283,21 +289,6 @@ def list_purchases(person_id=None, start_date=None, end_date=None):
 
 
 
-    
-
-    
-def test():    
-    print "committing..."
-    painting = Artwork(title="Blue boy", description="A classic")
-    s = session()
-    s.add(painting)
-    s.commit()
-
-    print "committed"
-
-    rows = s.query(Artwork).all()
-    print len(rows)
-    
 
 
 if __name__ == "__main__":

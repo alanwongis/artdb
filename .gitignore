@@ -4,4 +4,4 @@ static/thumbs
 static/jquery.mobile-1.4.5
 .DS_Store
 *.sqlite
-
+*.csv

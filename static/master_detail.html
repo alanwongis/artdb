@@ -66,7 +66,7 @@
 						<div flex="33">Medium</div>
 						<div flex="66">Oil on Canvas</div>
 						<div flex="33">Dimensions</div>
-						<div flex="66">11x8x1</div>						
+						<div flex="66">{{curr_dimensions}}</div>						
 					</div>
 					<div flex layout-wrap layout="row">
 						<div flex="33">Status</div>
@@ -82,7 +82,7 @@
 			
 				<div  flex layout="column" layout-padding>
 					<div flex>Notes</div>
-					<div flex>This is a set of notes about this wonderful painting. I could go on and on about this piece of art...</div>
+					<div flex>{{curr_notes}}</div>
 				</div>
 				
 			</md-content>
@@ -159,7 +159,8 @@
 					$scope.curr_date = response.date_created;
 					$scope.curr_img_hash = response.image_hash;
 					$scope.curr_status = response.status;
-					
+                    $scope.curr_dimensions = response.dimensions;
+                    $scope.curr_notes = response.notes;
 				});
 			};
 		
